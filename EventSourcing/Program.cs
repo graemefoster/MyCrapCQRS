@@ -12,15 +12,18 @@ namespace EventSourcing
         {
             //what no ioc...
             RegisterCommand<CreateCustomerCommand>(c => CreateCustomerCommandHandler(new SomeOtherService(), c));
-            RegisterCommand<ChangeCustomerNameCommand>(c => ChangeCustomerNameCommandHandler(new CustomerRepository(), c));
+            RegisterCommand<ChangeCustomerNameCommand>(c => ChangeCustomerNameCommandHandler(new LoanRepository(), c));
+            RegisterCommand<PayLoanCommand>(c => PayLoanCommandHandler(new LoanRepository(), c));
 
             Handle(new CreateCustomerCommand("Graeme Foster", new DateTime(1975, 7, 2)));
 
             //will learn how to get the id tomorrow. Sorry for the hack :)
             Handle(new ChangeCustomerNameCommand(EventStore.HackGetCustomerId(), "Fred Fibnar"));
 
-            //Loads the customer at its latest state purely by replaying events.
-            Customer customer = new CustomerRepository().Get(EventStore.HackGetCustomerId());
+            Handle(new PayLoanCommand(EventStore.HackGetCustomerId(), 10m));
+
+            //Loads the Loan at its latest state purely by replaying events.
+            Loan loan = new LoanRepository().Get(EventStore.HackGetCustomerId());
 
             Console.WriteLine();
             Console.WriteLine();
@@ -29,18 +32,26 @@ namespace EventSourcing
             Console.WriteLine();
             Console.WriteLine("Loading by replaying events");
             Console.WriteLine();
-            Console.WriteLine(customer.ToString());
+            Console.WriteLine(loan.ToString());
             Console.WriteLine();
             Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         }
 
         //Could be classes - just playing with a simple way of doing them.
         private static void ChangeCustomerNameCommandHandler(
-            ICustomerRepository customerRepository,
+            ILoanRepository loanRepository,
             ChangeCustomerNameCommand changeCustomerNameCommand)
         {
-            Customer customer = customerRepository.Get(changeCustomerNameCommand.Id);
-            customer.ChangeName(changeCustomerNameCommand.Name);
+            Loan loan = loanRepository.Get(changeCustomerNameCommand.Id);
+            loan.ChangeName(changeCustomerNameCommand.Name);
+        }
+
+        private static void PayLoanCommandHandler(
+    ILoanRepository loanRepository,
+    PayLoanCommand payLoanCommand)
+        {
+            Loan loan = loanRepository.Get(payLoanCommand.Id);
+            loan.Pay(payLoanCommand.Payment);
         }
 
         private static void Handle(object command)
@@ -52,7 +63,7 @@ namespace EventSourcing
         private static void CreateCustomerCommandHandler(ISomeOtherService otherService, CreateCustomerCommand command)
         {
             //Parameter injection via functional composition
-            var customer = new Customer(command.Name, command.DateOfBirth);
+            var customer = new Loan(command.Name, command.DateOfBirth);
         }
 
         private static Action<T> WrapInTransaction<T>(Action<T> handler)

@@ -25,4 +25,16 @@ namespace EventSourcing
         public Guid Id { get; set; }
         public string Name { get; set; }
     }
+
+    internal class PayLoanCommand
+    {
+        public PayLoanCommand(Guid id, decimal payment)
+        {
+            Id = id;
+            Payment = payment;
+        }
+
+        public Guid Id { get; set; }
+        public decimal Payment { get; set; }
+    }
 }

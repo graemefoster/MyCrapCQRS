@@ -46,12 +46,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CreateCustomerCommand.cs" />
-    <Compile Include="Customer.cs" />
-    <Compile Include="CustomerCreatedEvent.cs" />
-    <Compile Include="CustomerNameChangedEvent.cs" />
-    <Compile Include="CustomerRepository.cs" />
+    <Compile Include="Loan.cs" />
+    <Compile Include="LoanCreatedEvent.cs" />
+    <Compile Include="LoanNameChangedEvent.cs" />
+    <Compile Include="LoanPaymentEvent.cs" />
+    <Compile Include="LoanRepository.cs" />
     <Compile Include="EventStore.cs" />
-    <Compile Include="ICustomerRepository.cs" />
+    <Compile Include="ILoanRepository.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="IReplayEvents.cs" />
     <Compile Include="ISomeOtherService.cs" />

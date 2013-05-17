@@ -15,11 +15,6 @@ namespace EventSourcing
             Serializer = new JsonSerializer() { Formatting = Formatting.Indented};
         }
 
-        internal static Guid HackGetCustomerId()
-        {
-            return Events.Keys.Single();
-        }
-
         public static void Write(IEvent @event)
         {
             Serializer.Serialize(Console.Out, @event, @event.GetType());

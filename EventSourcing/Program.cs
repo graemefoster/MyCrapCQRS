@@ -15,15 +15,16 @@ namespace EventSourcing
             RegisterCommand<ChangeCustomerNameCommand>(c => ChangeCustomerNameCommandHandler(new LoanRepository(), c));
             RegisterCommand<PayLoanCommand>(c => PayLoanCommandHandler(new LoanRepository(), c));
 
-            Handle(new CreateCustomerCommand("Graeme Foster", new DateTime(1975, 7, 2)));
+            var customerId = Guid.NewGuid();
+            Handle(new CreateCustomerCommand(customerId, "Graeme Foster", new DateTime(1975, 7, 2)));
 
             //will learn how to get the id tomorrow. Sorry for the hack :)
-            Handle(new ChangeCustomerNameCommand(EventStore.HackGetCustomerId(), "Fred Fibnar"));
+            Handle(new ChangeCustomerNameCommand(customerId, "Fred Fibnar"));
 
-            Handle(new PayLoanCommand(EventStore.HackGetCustomerId(), 10m));
+            Handle(new PayLoanCommand(customerId, 10m));
 
             //Loads the Loan at its latest state purely by replaying events.
-            Loan loan = new LoanRepository().Get(EventStore.HackGetCustomerId());
+            Loan loan = new LoanRepository().Get(customerId);
 
             Console.WriteLine();
             Console.WriteLine();
@@ -63,7 +64,7 @@ namespace EventSourcing
         private static void CreateCustomerCommandHandler(ISomeOtherService otherService, CreateCustomerCommand command)
         {
             //Parameter injection via functional composition
-            var customer = new Loan(command.Name, command.DateOfBirth);
+            var customer = new Loan(command.Id, command.Name, command.DateOfBirth);
         }
 
         private static Action<T> WrapInTransaction<T>(Action<T> handler)

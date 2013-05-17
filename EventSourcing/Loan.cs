@@ -39,12 +39,12 @@ namespace EventSourcing
         {
         }
 
-        public Loan(string name, DateTime dateOfBirth)
+        public Loan(Guid id, string name, DateTime dateOfBirth)
         {
             if (name == null)
                 throw new ArgumentNullException("name");
 
-            ApplyChanges(EventStore.Create(new LoanCreatedEvent(Guid.NewGuid(), name, dateOfBirth)));
+            ApplyChanges(EventStore.Create(new LoanCreatedEvent(id, name, dateOfBirth)));
         }
 
         public void ApplyChanges(IEvent @event)

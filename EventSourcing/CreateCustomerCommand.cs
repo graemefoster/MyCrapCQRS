@@ -4,12 +4,14 @@ namespace EventSourcing
 {
     internal class CreateCustomerCommand
     {
-        public CreateCustomerCommand(string name, DateTime dateOfBirth)
+        public CreateCustomerCommand(Guid customerId, string name, DateTime dateOfBirth)
         {
+            Id = customerId;
             Name = name;
             DateOfBirth = dateOfBirth;
         }
 
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public DateTime DateOfBirth { get; set; }
     }

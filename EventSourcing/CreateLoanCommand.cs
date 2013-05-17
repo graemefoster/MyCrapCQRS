@@ -2,9 +2,9 @@
 
 namespace EventSourcing
 {
-    internal class CreateCustomerCommand
+    internal class CreateLoanCommand
     {
-        public CreateCustomerCommand(Guid customerId, string name, DateTime dateOfBirth)
+        public CreateLoanCommand(Guid customerId, string name, DateTime dateOfBirth)
         {
             Id = customerId;
             Name = name;
@@ -16,9 +16,9 @@ namespace EventSourcing
         public DateTime DateOfBirth { get; set; }
     }
 
-    internal class ChangeCustomerNameCommand
+    internal class ChangeCustomerNameOnLoanCommand
     {
-        public ChangeCustomerNameCommand(Guid id, string name)
+        public ChangeCustomerNameOnLoanCommand(Guid id, string name)
         {
             Id = id;
             Name = name;

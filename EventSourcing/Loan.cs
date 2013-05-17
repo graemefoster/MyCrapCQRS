@@ -9,7 +9,7 @@ namespace EventSourcing
             {
                 {
                     typeof (LoanCreatedEvent),
-                    new Action<Loan, LoanCreatedEvent>((c, t) => c.ApplyCustomerCreatedEvent(t))
+                    new Action<Loan, LoanCreatedEvent>((c, t) => c.ApplyLoanCreatedEvent(t))
                 },
                 {
                     typeof (LoanNameChangedEvent),
@@ -44,7 +44,7 @@ namespace EventSourcing
             if (name == null)
                 throw new ArgumentNullException("name");
 
-            ApplyChanges(EventStore.Create(new LoanCreatedEvent(id, name, dateOfBirth)));
+            ApplyChanges(EventStore.Create(new LoanCreatedEvent(id, name, dateOfBirth, 10m, 3m)));
         }
 
         public void ApplyChanges(IEvent @event)
@@ -52,13 +52,13 @@ namespace EventSourcing
             EventHandlers[@event.GetType()].DynamicInvoke(this, @event);
         }
 
-        private void ApplyCustomerCreatedEvent(LoanCreatedEvent @event)
+        private void ApplyLoanCreatedEvent(LoanCreatedEvent @event)
         {
             _id = @event.Id;
             _dateOfBirth = @event.DateOfBirth;
             _name = @event.Name;
-            _principal = 10;
-            _interest = 3;
+            _principal = @event.Principal;
+            _interest = @event.Interest;
             //can ignore properties if you want to
         }
 
@@ -85,5 +85,6 @@ namespace EventSourcing
         {
             ApplyChanges(EventStore.Create(new LoanPaymentEvent(this._id, -2, -(payment - 2))));
         }
+
     }
 }

@@ -9,6 +9,7 @@ namespace EventSourcing
     {
         private static readonly JsonSerializer Serializer;
         private static readonly Dictionary<Guid, IList<IEvent>> Events = new Dictionary<Guid, IList<IEvent>>();
+        private static IReplayEvents _projection;
 
         static EventStore()
         {
@@ -28,6 +29,7 @@ namespace EventSourcing
                 var events = new List<IEvent> {@event};
                 Events.Add(@event.Id, events);
             }
+            _projection.ApplyChanges(@event);
         }
 
         public static T Get<T>(Guid id) where T : IReplayEvents, new()
@@ -44,6 +46,11 @@ namespace EventSourcing
         {
             Write(@event);
             return @event;
+        }
+
+        public static void RegisterProjection(IReplayEvents projection)
+        {
+            _projection = projection;
         }
     }
 }

@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CreateCustomerCommand.cs" />
+    <Compile Include="CreateLoanCommand.cs" />
     <Compile Include="Loan.cs" />
     <Compile Include="LoanCreatedEvent.cs" />
     <Compile Include="LoanNameChangedEvent.cs" />
@@ -58,6 +58,7 @@
     <Compile Include="ISomeOtherService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportingProjection.cs" />
     <Compile Include="SomeOtherService.cs" />
   </ItemGroup>
   <ItemGroup>
